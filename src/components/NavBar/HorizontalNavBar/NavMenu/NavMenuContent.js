@@ -10,6 +10,7 @@ const { useCore } = require('stremio/core');
 const { Button } = require('stremio/components');
 const { useFullscreen } = require('stremio/common/Fullscreen');
 const useProfile = require('stremio/common/useProfile');
+const useCustomTheme = require('stremio/common/useCustomTheme');
 const usePWA = require('stremio/common/usePWA');
 const { default: usePlayUrl } = require('stremio/common/usePlayUrl');
 const useToast = require('stremio/common/Toast/useToast');
@@ -22,6 +23,7 @@ const NavMenuContent = ({ onClick }) => {
     const navigate = useNavigate();
     const core = useCore();
     const profile = useProfile();
+    const { color: accentColor, setColor: setAccentColor } = useCustomTheme();
     const streamingServer = useStreamingServer();
     const { handlePlayUrl } = usePlayUrl();
     const toast = useToast();
@@ -97,6 +99,17 @@ const NavMenuContent = ({ onClick }) => {
                     :
                     null
             }
+            <div className={styles['nav-menu-section']}>
+                <div className={styles['nav-menu-option-container']} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'default' }}>
+                    <div className={styles['nav-menu-option-label']}>{'Accent Color'}</div>
+                    <input
+                        type={'color'}
+                        value={accentColor}
+                        onChange={(event) => setAccentColor(event.target.value)}
+                        style={{ width: '2rem', height: '2rem', border: 'none', background: 'none', cursor: 'pointer' }}
+                    />
+                </div>
+            </div>
             <div className={styles['nav-menu-section']}>
                 <Button className={styles['nav-menu-option-container']} title={ t('SETTINGS') } href={'#/settings'}>
                     <Icon className={styles['icon']} name={'settings'} />

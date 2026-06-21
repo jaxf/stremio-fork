@@ -62,7 +62,7 @@ const Board = () => {
                             :
                             null
                     }
-                    {board.catalogs.map((catalog, index) => {
+                    {board.catalogs.filter((catalog) => catalog.name?.toLowerCase() !== 'featured').map((catalog, index) => {
                         switch (catalog.content?.type) {
                             case 'Ready': {
                                 return (

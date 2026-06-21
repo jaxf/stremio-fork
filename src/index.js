@@ -1,4 +1,23 @@
-// Copyright (C) 2017-2023 Smart code 203358507
+// Apply saved accent color theme immediately, before React renders anything
+(() => {
+    try {
+        const hex = localStorage.getItem('customTheme');
+        if (hex) {
+            const sanitized = hex.replace('#', '');
+            const bigint = parseInt(sanitized, 16);
+            const r = (bigint >> 16) & 255;
+            const g = (bigint >> 8) & 255;
+            const b = bigint & 255;
+            const root = document.documentElement;
+            root.style.setProperty('--primary-accent-color', `rgb(${r}, ${g}, ${b})`);
+            root.style.setProperty('--secondary-background-color', `rgba(${r}, ${g}, ${b}, 0.25)`);
+            root.style.setProperty('--outer-glow', `0px 0px 15px rgba(${r}, ${g}, ${b}, 0.37)`);
+            root.style.setProperty('--modal-background-color', `rgba(${Math.round(r * 0.15 + 15 * 0.85)}, ${Math.round(g * 0.15 + 13 * 0.85)}, ${Math.round(b * 0.15 + 32 * 0.85)}, 1)`);
+        }
+    } catch (e) {
+        // localStorage unavailable, skip
+    }
+})();
 
 if (typeof process.env.SENTRY_DSN === 'string') {
     const Sentry = require('@sentry/browser');

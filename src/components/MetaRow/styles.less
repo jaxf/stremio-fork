@@ -20,6 +20,7 @@
             font-size: 1.6rem;
             font-weight: 500;
             color: var(--primary-foreground-color);
+            text-align: center;
         }
 
         .see-all-container {
@@ -63,24 +64,25 @@
         color: var(--primary-foreground-color);
         opacity: 0.6;
     }
-
-    .meta-items-container {
+.meta-items-container {
         display: flex;
         flex-direction: row;
         align-items: stretch;
+        justify-content: center;
+        gap: 1rem;
         overflow: visible;
-
         .meta-item {
+            flex: none;
+            width: 12rem;
+
             &.poster-shape-poster {
-                flex: calc(1 / var(--poster-shape-ratio));
+                flex: none;
             }
-
             &.poster-shape-square {
-                flex: 1;
+                flex: none;
             }
-
             &.poster-shape-landscape {
-                flex: calc(1 / var(--landscape-shape-ratio));
+                flex: none;
             }
         }
     }
