@@ -5,30 +5,35 @@
     font-family: 'Inter';
     src: url('/assets/fonts/Inter-Regular.ttf') format('truetype');
     font-weight: 400;
+    font-display: swap;
 }
 
 @font-face {
     font-family: 'Inter';
     src: url('/assets/fonts/Inter-Medium.ttf') format('truetype');
     font-weight: 500;
+    font-display: swap;
 }
 
 @font-face {
     font-family: 'Inter';
     src: url('/assets/fonts/Inter-SemiBold.ttf') format('truetype');
     font-weight: 600;
+    font-display: swap;
 }
 
 @font-face {
     font-family: 'Inter';
     src: url('/assets/fonts/Inter-Bold.ttf') format('truetype');
     font-weight: 700;
+    font-display: swap;
 }
 
 @font-face {
     font-family: 'TwemojiFlags';
     src: url('/assets/fonts/TwemojiFlags.woff2') format('woff2');
     unicode-range: U+1F1E6-1F1FF;
+    font-display: swap;
 }
 
 :global {
@@ -75,20 +80,26 @@
     --color-placeholder: #60606080;
     --color-placeholder-text: @color-surface-50;
     --color-placeholder-background: @color-surface-dark5-20;
-    --primary-background-color: rgba(12, 11, 17, 1);
-    --secondary-background-color: rgba(26, 23, 62, 1);
-    --primary-foreground-color: rgba(255, 255, 255, 0.9);
-    --secondary-foreground-color: rgb(12, 11, 17, 1);
-    --primary-accent-color: rgb(123, 91, 245);
-    --secondary-accent-color: rgba(34, 179, 101, 1);
-    --tertiary-accent-color: rgba(246, 199, 0, 1);
-    --quaternary-accent-color: rgba(18, 69, 166, 1);
-    --overlay-color: rgba(255, 255, 255, 0.05);
-    --modal-background-color: rgba(15, 13, 32, 1);
-    --outer-glow: 0px 0px 15px rgba(123, 91, 245, 0.37);
+    --primary-background-color: #070a13;
+    --secondary-background-color: #10172a;
+    --primary-foreground-color: rgba(248, 250, 252, 0.94);
+    --secondary-foreground-color: #070a13;
+    --primary-accent-color: #8b7cff;
+    --secondary-accent-color: #2dd4bf;
+    --tertiary-accent-color: #facc15;
+    --quaternary-accent-color: #60a5fa;
+    --overlay-color: rgba(255, 255, 255, 0.085);
+    --modal-background-color: rgba(12, 17, 31, 0.94);
+    --outer-glow: 0 20px 60px rgba(0, 0, 0, 0.36), 0 0 0 1px rgba(255, 255, 255, 0.10);
     --warning-accent-color: rgba(255, 165, 0, 1);
     --danger-accent-color: rgba(220, 38, 38, 1);  
-    --border-radius: 0.75rem;
+    --border-radius: 1.05rem;
+    --glass-surface: rgba(16, 23, 42, 0.72);
+    --glass-surface-strong: rgba(23, 31, 52, 0.88);
+    --glass-border: rgba(255, 255, 255, 0.14);
+    --glass-border-strong: rgba(255, 255, 255, 0.22);
+    --glass-shadow: 0 22px 70px rgba(0, 0, 0, 0.38), inset 0 1px 0 rgba(255, 255, 255, 0.10);
+    --text-muted-color: rgba(226, 232, 240, 0.68);
     --top-overlay-size: @top-overlay-size;
     --bottom-overlay-size: @bottom-overlay-size;
     --overlap-size: @overlap-size;
@@ -285,5 +296,518 @@ html {
 @media only screen and (max-width: @minimum) {
     :root {
         --bottom-overlay-size: 6rem;
+    }
+}
+
+/* Liquid Glass v2 — safer targeted styling layer
+   Fixes from screenshots: less foggy menus, stronger text contrast, no broad
+   [class*='menu/item/bar'] overrides, cleaner cards/search/details panels. */
+html {
+    color-scheme: dark;
+    letter-spacing: -0.01em;
+}
+
+body {
+    color: var(--primary-foreground-color);
+    background:
+        radial-gradient(circle at 12% 5%, color-mix(in srgb, var(--primary-accent-color) 32%, transparent), transparent 28rem),
+        radial-gradient(circle at 86% 12%, color-mix(in srgb, var(--secondary-accent-color) 18%, transparent), transparent 32rem),
+        radial-gradient(circle at 50% 100%, color-mix(in srgb, var(--primary-accent-color) 13%, transparent), transparent 38rem),
+        linear-gradient(135deg, var(--primary-background-color) 0%, color-mix(in srgb, var(--primary-background-color) 76%, var(--secondary-background-color)) 46%, var(--secondary-background-color) 100%) !important;
+    text-rendering: optimizeLegibility;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background: linear-gradient(120deg, rgba(255, 255, 255, 0.07), transparent 24%, transparent 74%, rgba(255, 255, 255, 0.04));
+    opacity: 0.5;
+}
+
+button,
+input,
+textarea,
+select,
+[role='button'] {
+    transition: transform 140ms ease, background-color 140ms ease, border-color 140ms ease, box-shadow 140ms ease, opacity 140ms ease;
+}
+
+button:active,
+[role='button']:active {
+    transform: scale(0.985);
+}
+
+input,
+textarea,
+select {
+    color: var(--primary-foreground-color);
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: rgba(226, 232, 240, 0.55);
+}
+
+input:focus,
+textarea:focus,
+select:focus,
+button:focus-visible,
+[role='button']:focus-visible,
+a:focus-visible {
+    outline: 2px solid rgba(139, 124, 255, 0.72) !important;
+    outline-offset: 2px;
+}
+
+/* Search bar */
+.search-bar-container {
+    background: rgba(22, 29, 48, 0.78) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    box-shadow: var(--glass-shadow);
+    backdrop-filter: blur(22px) saturate(1.25);
+    -webkit-backdrop-filter: blur(22px) saturate(1.25);
+}
+
+.search-bar-container:focus-within {
+    border-color: rgba(139, 124, 255, 0.78) !important;
+    box-shadow: 0 0 0 4px rgba(139, 124, 255, 0.16), var(--glass-shadow) !important;
+}
+
+.search-bar-container .search-input {
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+}
+
+/* Rows and posters */
+.board-content,
+.search-content {
+    padding-left: 1.5rem !important;
+    padding-right: 1.5rem !important;
+}
+
+.meta-row-container {
+    max-width: 92rem;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0.25rem 0;
+}
+
+.meta-row-container .header-container {
+    padding: 0 1.25rem !important;
+}
+
+.meta-row-container .title-container {
+    font-size: clamp(1.35rem, 1.35vw, 1.75rem) !important;
+    font-weight: 650 !important;
+    letter-spacing: -0.035em;
+    color: rgba(255, 255, 255, 0.95) !important;
+    text-shadow: 0 1px 24px rgba(0, 0, 0, 0.4);
+}
+
+.meta-row-container .see-all-container {
+    background: rgba(255, 255, 255, 0.055);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    opacity: 0.72 !important;
+}
+
+.meta-row-container .see-all-container:hover,
+.meta-row-container .see-all-container:focus {
+    background: rgba(255, 255, 255, 0.12) !important;
+    border-color: rgba(255, 255, 255, 0.18);
+    opacity: 1 !important;
+}
+
+.meta-items-container {
+    gap: 1.35rem !important;
+}
+
+.meta-item-container {
+    border-radius: calc(var(--border-radius) * 1.1);
+    transition: transform 160ms ease, filter 160ms ease;
+}
+
+.meta-item-container:hover,
+.meta-item-container:focus,
+.meta-item-container:global(.active),
+.meta-item-container:global(.selected) {
+    transform: translateY(-2px);
+    filter: brightness(1.06) saturate(1.04);
+}
+
+.meta-item-container .poster-container {
+    background: rgba(255, 255, 255, 0.07) !important;
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    box-shadow: 0 18px 42px rgba(0, 0, 0, 0.32);
+    overflow: hidden;
+}
+
+.meta-item-container .poster-image {
+    opacity: 1 !important;
+}
+
+.meta-item-container .progress-bar-layer {
+    height: 0.38rem !important;
+    left: 1rem !important;
+    right: 1rem !important;
+    bottom: 0.85rem !important;
+    background: rgba(255, 255, 255, 0.20);
+    box-shadow: 0 0 18px rgba(45, 212, 191, 0.22);
+}
+
+.meta-item-container .progress-bar {
+    background: linear-gradient(90deg, var(--secondary-accent-color), #67e8f9) !important;
+}
+
+.meta-item-container .title-bar-container {
+    height: 3.25rem !important;
+    margin-top: 0.35rem;
+}
+
+.meta-item-container .title-label {
+    color: rgba(255, 255, 255, 0.92) !important;
+    font-weight: 650 !important;
+    line-height: 1.15;
+}
+
+/* Menus, popups and modals. Keep these darker than before so text is readable. */
+.menu-container,
+.modal-dialog-container,
+.bottom-sheet-container,
+.context-menu-container,
+.multiselect-menu-container {
+    background: rgba(18, 25, 42, 0.94) !important;
+    border: 1px solid rgba(255, 255, 255, 0.16) !important;
+    box-shadow: 0 26px 80px rgba(0, 0, 0, 0.48), inset 0 1px 0 rgba(255, 255, 255, 0.10) !important;
+    backdrop-filter: blur(24px) saturate(1.2) !important;
+    -webkit-backdrop-filter: blur(24px) saturate(1.2) !important;
+}
+
+.menu-container *,
+.modal-dialog-container *,
+.bottom-sheet-container *,
+.context-menu-container *,
+.multiselect-menu-container * {
+    color: rgba(248, 250, 252, 0.92);
+}
+
+.option-container,
+.multiselect-option-container {
+    border-radius: 0.8rem;
+}
+
+.option-container:hover,
+.option-container:focus,
+.multiselect-option-container:hover,
+.multiselect-option-container:focus {
+    background: rgba(255, 255, 255, 0.09) !important;
+}
+
+/* Meta details / stream list */
+.metadetails-container .background-image-layer {
+    background:
+        linear-gradient(90deg, rgba(8, 13, 25, 0.82), rgba(8, 13, 25, 0.62)),
+        var(--modal-background-color) !important;
+}
+
+.metadetails-container .background-image {
+    opacity: 0.42 !important;
+}
+
+.metadetails-container .videos-list,
+.metadetails-container .streams-list {
+    flex-basis: 29rem !important;
+    margin-right: 0.75rem;
+    border-radius: 1.25rem !important;
+    background: rgba(13, 19, 32, 0.86) !important;
+    border: 1px solid rgba(255, 255, 255, 0.13);
+    box-shadow: var(--glass-shadow);
+    backdrop-filter: blur(22px) saturate(1.2);
+    -webkit-backdrop-filter: blur(22px) saturate(1.2);
+}
+
+.meta-preview .genre-container,
+.meta-preview .director-container,
+.meta-preview .cast-container,
+.meta-preview .runtime-container,
+.meta-preview .year-container,
+.meta-preview .imdb-rating-container,
+.meta-preview .imdb-logo-container {
+    background: rgba(255, 255, 255, 0.10) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 999px !important;
+}
+
+.meta-preview .title-container {
+    letter-spacing: -0.055em;
+    text-shadow: 0 8px 42px rgba(0, 0, 0, 0.45);
+}
+
+.meta-preview .description-container,
+.meta-preview .summary-container {
+    color: rgba(248, 250, 252, 0.82) !important;
+}
+
+/* Search empty state */
+.search-hints-title,
+.search-hint-container .label,
+.search-hint-container .icon {
+    opacity: 0.55 !important;
+}
+
+/* General text polish */
+.message-label,
+p,
+.label {
+    line-height: 1.35;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.18) !important;
+}
+
+@media only screen and (max-width: 720px) {
+    .board-content,
+    .search-content {
+        padding-left: 0.75rem !important;
+        padding-right: 0.75rem !important;
+    }
+
+    .meta-row-container .title-container {
+        font-size: 1.35rem !important;
+    }
+
+    .meta-items-container {
+        gap: 0.5rem !important;
+    }
+
+    .metadetails-container .videos-list,
+    .metadetails-container .streams-list {
+        margin-right: 0;
+        border-radius: 1.25rem 1.25rem 0 0 !important;
+    }
+}
+
+
+/* Liquid Glass v3 — accent-aware theme, cleaner home layout, lighter rendering cost.
+   This layer intentionally uses the app's existing CSS variables so accent/theme changes
+   visibly affect the whole interface instead of only icons/buttons. */
+:root {
+    --liquid-accent-soft: color-mix(in srgb, var(--primary-accent-color) 24%, transparent);
+    --liquid-accent-mid: color-mix(in srgb, var(--primary-accent-color) 42%, transparent);
+    --liquid-secondary-soft: color-mix(in srgb, var(--secondary-accent-color) 20%, transparent);
+    --liquid-bg-raised: color-mix(in srgb, var(--modal-background-color) 88%, var(--primary-accent-color) 12%);
+    --liquid-bg-panel: color-mix(in srgb, var(--primary-background-color) 76%, var(--primary-accent-color) 24%);
+    --liquid-line: color-mix(in srgb, var(--primary-accent-color) 30%, rgba(255, 255, 255, 0.18));
+    --liquid-glow: 0 24px 80px color-mix(in srgb, var(--primary-accent-color) 20%, rgba(0, 0, 0, 0.55));
+}
+
+html body {
+    background:
+        radial-gradient(circle at 14% 4%, var(--liquid-accent-soft), transparent 30rem),
+        radial-gradient(circle at 88% 12%, var(--liquid-secondary-soft), transparent 34rem),
+        radial-gradient(circle at 52% 110%, color-mix(in srgb, var(--primary-accent-color) 12%, transparent), transparent 44rem),
+        linear-gradient(135deg, var(--primary-background-color), var(--secondary-background-color)) !important;
+}
+
+html body::before {
+    background:
+        linear-gradient(115deg, rgba(255, 255, 255, 0.055), transparent 26%, transparent 74%, var(--liquid-accent-soft)),
+        linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.16) 100%);
+}
+
+/* Accent-aware global surfaces */
+.search-bar-container,
+.menu-container,
+.modal-dialog-container,
+.bottom-sheet-container,
+.context-menu-container,
+.multiselect-menu-container,
+.metadetails-container .videos-list,
+.metadetails-container .streams-list {
+    background: color-mix(in srgb, var(--modal-background-color) 88%, var(--primary-accent-color) 12%) !important;
+    border-color: var(--liquid-line) !important;
+    box-shadow: var(--liquid-glow), inset 0 1px 0 rgba(255, 255, 255, 0.10) !important;
+}
+
+.search-bar-container:focus-within,
+.option-container:hover,
+.option-container:focus,
+.multiselect-option-container:hover,
+.multiselect-option-container:focus {
+    background: color-mix(in srgb, var(--modal-background-color) 78%, var(--primary-accent-color) 22%) !important;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: color-mix(in srgb, var(--primary-accent-color) 75%, white 8%) !important;
+}
+
+/* Faster perceived loading / smoother scrolling: only render offscreen rows when needed. */
+.meta-row-container,
+.search-content,
+.board-content,
+.library-content,
+.discover-content {
+    content-visibility: auto;
+    contain-intrinsic-size: 1px 34rem;
+}
+
+.meta-item-container,
+.meta-item-container .poster-container,
+.meta-item-container .poster-image {
+    contain: layout paint style;
+    backface-visibility: hidden;
+}
+
+.meta-item-container:hover,
+.meta-item-container:focus,
+.meta-item-container:global(.active),
+.meta-item-container:global(.selected) {
+    will-change: transform, filter;
+}
+
+/* Home page cleanup: centered content, clearer row cards, less dead space. */
+.board-content {
+    max-width: 104rem;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding-top: 1.25rem !important;
+    padding-bottom: 4rem !important;
+}
+
+.board-content .meta-row-container {
+    position: relative;
+    margin-top: 1.35rem !important;
+    margin-bottom: 1.85rem !important;
+    padding: 1.25rem 1.15rem 1.45rem !important;
+    border-radius: 1.55rem;
+    background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.045), transparent 35%),
+        color-mix(in srgb, var(--primary-background-color) 72%, var(--primary-accent-color) 10%) !important;
+    border: 1px solid color-mix(in srgb, var(--primary-accent-color) 20%, rgba(255, 255, 255, 0.11));
+    box-shadow: 0 20px 70px rgba(0, 0, 0, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.board-content .meta-row-container:first-of-type {
+    margin-top: 0.5rem !important;
+    background:
+        radial-gradient(circle at 18% 0%, var(--liquid-accent-soft), transparent 28rem),
+        linear-gradient(135deg, color-mix(in srgb, var(--primary-background-color) 70%, var(--primary-accent-color) 18%), rgba(255, 255, 255, 0.03)) !important;
+    border-color: color-mix(in srgb, var(--primary-accent-color) 42%, rgba(255, 255, 255, 0.14));
+}
+
+.board-content .meta-row-container .header-container {
+    min-height: 2.6rem;
+    padding: 0 0.75rem 0.6rem !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.board-content .meta-row-container .title-container {
+    text-align: center;
+    font-size: clamp(1.25rem, 1.2vw, 1.65rem) !important;
+    letter-spacing: -0.045em;
+}
+
+.board-content .meta-row-container .see-all-container {
+    position: absolute;
+    right: 1rem;
+    top: 1rem;
+    min-height: 1.9rem;
+    padding: 0 0.75rem;
+    border-radius: 999px;
+}
+
+.board-content .meta-items-container {
+    justify-content: center !important;
+    align-items: flex-start !important;
+    padding: 0.15rem 0.4rem 0.2rem !important;
+    gap: clamp(1rem, 2vw, 2.45rem) !important;
+}
+
+.board-content .meta-item-container {
+    overflow: visible;
+}
+
+.board-content .meta-item-container .poster-container {
+    border-radius: 1rem !important;
+}
+
+.board-content .meta-item-container .title-bar-container {
+    margin-top: 0.48rem !important;
+    background: color-mix(in srgb, var(--modal-background-color) 62%, var(--primary-accent-color) 18%) !important;
+    border: 1px solid color-mix(in srgb, var(--primary-accent-color) 24%, rgba(255, 255, 255, 0.18));
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+/* Better search / empty state readability */
+.search-content {
+    max-width: 92rem;
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
+.search-hints-title {
+    color: rgba(248, 250, 252, 0.72) !important;
+    opacity: 1 !important;
+}
+
+.search-hint-container .label,
+.search-hint-container .icon {
+    color: rgba(248, 250, 252, 0.62) !important;
+    opacity: 1 !important;
+}
+
+/* Make the streams list feel intentional, not like a gray overlay. */
+.metadetails-container .streams-list .stream-container,
+.metadetails-container .videos-list .video-container {
+    background: color-mix(in srgb, var(--modal-background-color) 74%, var(--primary-accent-color) 12%) !important;
+    border: 1px solid color-mix(in srgb, var(--primary-accent-color) 22%, rgba(255, 255, 255, 0.13));
+    border-radius: 1rem !important;
+}
+
+.metadetails-container .streams-list .stream-container:hover,
+.metadetails-container .videos-list .video-container:hover {
+    background: color-mix(in srgb, var(--modal-background-color) 68%, var(--primary-accent-color) 20%) !important;
+}
+
+@media only screen and (max-width: 900px) {
+    .board-content {
+        padding-top: 0.5rem !important;
+        padding-left: 0.65rem !important;
+        padding-right: 0.65rem !important;
+    }
+
+    .board-content .meta-row-container {
+        padding: 1rem 0.55rem 1.15rem !important;
+        border-radius: 1.25rem;
+    }
+
+    .board-content .meta-row-container .header-container {
+        justify-content: flex-start;
+        padding-left: 0.55rem !important;
+        padding-right: 4.5rem !important;
+    }
+
+    .board-content .meta-row-container .title-container {
+        text-align: left;
+        font-size: 1.25rem !important;
+    }
+
+    .board-content .meta-items-container {
+        justify-content: flex-start !important;
+        gap: 0.85rem !important;
+    }
+}
+
+@supports not (background: color-mix(in srgb, red 50%, blue)) {
+    html body {
+        background:
+            radial-gradient(circle at 14% 4%, rgba(139, 124, 255, 0.24), transparent 30rem),
+            radial-gradient(circle at 88% 12%, rgba(45, 212, 191, 0.16), transparent 34rem),
+            linear-gradient(135deg, var(--primary-background-color), var(--secondary-background-color)) !important;
     }
 }
