@@ -93,10 +93,11 @@
                 opacity: 0.6;
             }
 
-            &:hover, &:global(.active) {
+            &:hover,
+            &:global(.active) {
                 background-color: var(--overlay-color);
                 opacity: 1;
-    
+
                 .icon {
                     color: var(--primary-foreground-color);
                     opacity: 0.8;
@@ -117,18 +118,20 @@
             flex-grow: 1;
             background-color: none;
 
-            &:hover, &:focus, &:global(.active) {
+            &:hover,
+            &:focus,
+            &:global(.active) {
                 background-color: var(--overlay-color);
             }
-    
-            & >.multiselect-label {
+
+            & > .multiselect-label {
                 color: var(--primary-foreground-color);
             }
-    
-            & >.multiselect-icon {
+
+            & > .multiselect-icon {
                 color: var(--primary-foreground-color);
             }
-    
+
             .multiselect-menu-container {
                 overflow: auto;
             }
@@ -141,6 +144,39 @@
         margin-top: 1rem;
         padding: 0 1rem;
         overflow-y: auto;
+    }
+
+    .stream-wrapper {
+        position: relative;
+        border-radius: var(--border-radius);
+    }
+
+    .stream-wrapper.last-used-stream-wrapper {
+        margin-bottom: 0.75rem;
+        border: 1px solid var(--primary-accent-color);
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.13), rgba(255, 255, 255, 0.04));
+        box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08) inset, 0 0.9rem 2rem rgba(0, 0, 0, 0.22);
+    }
+
+    .last-used-stream-banner {
+        position: sticky;
+        top: 0;
+        z-index: 3;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: fit-content;
+        max-width: calc(100% - 1rem);
+        margin: 0.45rem 0.5rem 0;
+        padding: 0.32rem 0.75rem;
+        border-radius: 999rem;
+        color: var(--primary-foreground-color);
+        background-color: var(--primary-accent-color);
+        font-size: 0.78rem;
+        font-weight: 800;
+        line-height: 1;
+        letter-spacing: 0.01em;
+        box-shadow: 0 0.45rem 1.2rem rgba(0, 0, 0, 0.24);
     }
 
     .install-button-container {
@@ -207,5 +243,57 @@
             padding: 1em;
             background-color: var(--primary-background-color);
         }
+    }
+}
+
+/* JAXN stream UX upgrades */
+.streams-list-container {
+    .stream-filter-bar {
+        display: flex;
+        flex: none;
+        gap: 0.45rem;
+        padding: 0.7rem 1rem 0;
+        overflow-x: auto;
+        scrollbar-width: none;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+    }
+
+    .stream-filter-pill {
+        flex: none;
+        min-height: 2.15rem;
+        padding: 0 0.85rem;
+        border-radius: 999rem;
+        color: color-mix(in srgb, var(--primary-foreground-color) 78%, transparent);
+        background: color-mix(in srgb, var(--modal-background-color) 76%, var(--primary-accent-color) 10%);
+        border: 1px solid color-mix(in srgb, var(--primary-accent-color) 20%, rgba(255, 255, 255, 0.12));
+        font-size: 0.86rem;
+        font-weight: 700;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+
+        &:hover,
+        &:focus,
+        &:global(.active) {
+            color: var(--primary-foreground-color);
+            background: color-mix(in srgb, var(--primary-accent-color) 28%, var(--modal-background-color) 72%);
+        }
+    }
+
+    .selected-stream-filter-pill {
+        color: var(--primary-foreground-color);
+        background: linear-gradient(135deg, var(--primary-accent-color), color-mix(in srgb, var(--primary-accent-color) 56%, var(--secondary-accent-color) 44%));
+        border-color: rgba(255, 255, 255, 0.25);
+        box-shadow: 0 0.7rem 1.4rem color-mix(in srgb, var(--primary-accent-color) 24%, transparent);
+    }
+
+    .streams-container {
+        contain: layout paint;
+    }
+
+    .stream-wrapper {
+        content-visibility: auto;
+        contain-intrinsic-size: 6.5rem;
     }
 }

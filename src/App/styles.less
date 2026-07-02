@@ -811,3 +811,104 @@ html body::before {
             linear-gradient(135deg, var(--primary-background-color), var(--secondary-background-color)) !important;
     }
 }
+
+/* JAXN v7 design/function polish */
+html body::before,
+html body::after {
+    pointer-events: none;
+}
+
+html body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    background:
+        radial-gradient(circle at 18% 8%, color-mix(in srgb, var(--primary-accent-color) 30%, transparent), transparent 28rem),
+        radial-gradient(circle at 82% 14%, color-mix(in srgb, var(--secondary-accent-color) 18%, transparent), transparent 34rem),
+        linear-gradient(135deg, color-mix(in srgb, var(--primary-background-color) 88%, #020617 12%), color-mix(in srgb, var(--secondary-background-color) 72%, var(--primary-accent-color) 8%));
+}
+
+html body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    opacity: 0.055;
+    background-image: linear-gradient(rgba(255,255,255,0.55) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.55) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: radial-gradient(circle at 50% 0%, black, transparent 72%);
+}
+
+/* sharper home/search/cards */
+.board-content .meta-row-container .header-container,
+.board-content .meta-row-container .title-container {
+    color: var(--primary-foreground-color) !important;
+    text-shadow: 0 1px 1.2rem rgba(0, 0, 0, 0.28);
+}
+
+.board-content .meta-row-container .see-all-container,
+.board-content .meta-row-container .button-container {
+    border-radius: 999rem !important;
+    background: color-mix(in srgb, var(--modal-background-color) 70%, var(--primary-accent-color) 14%) !important;
+    border: 1px solid color-mix(in srgb, var(--primary-accent-color) 22%, rgba(255, 255, 255, 0.16));
+}
+
+.search-bar-container,
+.search-container .search-bar-container {
+    background: color-mix(in srgb, var(--modal-background-color) 76%, var(--primary-accent-color) 9%) !important;
+    border: 1px solid color-mix(in srgb, var(--primary-accent-color) 18%, rgba(255, 255, 255, 0.18));
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.06), 0 0.7rem 2.2rem rgba(0, 0, 0, 0.18);
+}
+
+.search-bar-container:focus-within,
+.search-container .search-bar-container:focus-within {
+    border-color: color-mix(in srgb, var(--primary-accent-color) 75%, white 10%) !important;
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-accent-color) 28%, transparent), 0 1rem 2.8rem rgba(0, 0, 0, 0.22);
+}
+
+/* Account drawer/menu: less fog, more readable */
+.menu-container,
+.account-menu-container,
+.settings-menu-container,
+.popup-container {
+    backdrop-filter: blur(22px) saturate(1.2) !important;
+    -webkit-backdrop-filter: blur(22px) saturate(1.2) !important;
+}
+
+.account-menu-container,
+.settings-menu-container {
+    background: color-mix(in srgb, var(--modal-background-color) 88%, var(--primary-accent-color) 8%) !important;
+    border: 1px solid color-mix(in srgb, var(--primary-accent-color) 24%, rgba(255, 255, 255, 0.16));
+    box-shadow: 0 2rem 5rem rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255,255,255,0.06);
+}
+
+.account-menu-container *,
+.settings-menu-container * {
+    color: var(--primary-foreground-color) !important;
+    opacity: 0.98 !important;
+}
+
+/* Metadata/details page readability */
+.metadetails-container .meta-details-content,
+.metadetails-container .details-container {
+    text-shadow: 0 1px 1rem rgba(0,0,0,0.22);
+}
+
+.metadetails-container .streams-list {
+    background: color-mix(in srgb, var(--modal-background-color) 84%, var(--primary-accent-color) 5%) !important;
+    border-left: 1px solid color-mix(in srgb, var(--primary-accent-color) 18%, rgba(255,255,255,0.12));
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .board-content .meta-item-container,
+    .board-content .meta-item,
+    .stream-container {
+        transition: transform 150ms ease, filter 150ms ease, opacity 150ms ease;
+    }
+
+    .board-content .meta-item-container:hover,
+    .board-content .meta-item:hover {
+        transform: translateY(-2px) scale(1.012);
+    }
+}

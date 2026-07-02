@@ -9,16 +9,29 @@ const { useCore } = require('stremio/core');
 const { useProfile, usePlatform, useToast, useBinaryState } = require('stremio/common');
 const { Button, Image, Popup } = require('stremio/components');
 const { default: useRouteFocused } = require('stremio/common/useRouteFocused');
+
 const StreamPlaceholder = require('./StreamPlaceholder');
 const styles = require('./styles');
 
-const Stream = ({ className, videoId, videoReleased, addonName, name, description, thumbnail, progress, deepLinks, ...props }) => {
+const Stream = ({
+    className,
+    videoId,
+    videoReleased,
+    addonName,
+    name,
+    description,
+    thumbnail,
+    progress,
+    deepLinks,
+    isLastUsedStream,
+    onSelect,
+    ...props
+}) => {
     const profile = useProfile();
     const toast = useToast();
     const platform = usePlatform();
     const core = useCore();
     const routeFocused = useRouteFocused();
-
     const [menuOpen, , closeMenu, toggleMenu] = useBinaryState(false);
 
     const popupLabelOnMouseUp = React.useCallback((event) => {
@@ -29,25 +42,31 @@ const Stream = ({ className, videoId, videoReleased, addonName, name, descriptio
             }
         }
     }, []);
+
     const popupLabelOnContextMenu = React.useCallback((event) => {
         if (!event.nativeEvent.togglePopupPrevented && !event.nativeEvent.ctrlKey) {
             event.preventDefault();
         }
     }, [toggleMenu]);
+
     const popupLabelOnLongPress = React.useCallback((event) => {
         if (event.nativeEvent.pointerType !== 'mouse' && !event.nativeEvent.togglePopupPrevented) {
             toggleMenu();
         }
     }, [toggleMenu]);
+
     const popupMenuOnPointerDown = React.useCallback((event) => {
         event.nativeEvent.togglePopupPrevented = true;
     }, []);
+
     const popupMenuOnContextMenu = React.useCallback((event) => {
         event.nativeEvent.togglePopupPrevented = true;
     }, []);
+
     const popupMenuOnClick = React.useCallback((event) => {
         event.nativeEvent.togglePopupPrevented = true;
     }, []);
+
     const popupMenuOnKeyDown = React.useCallback((event) => {
         event.nativeEvent.buttonClickPrevented = true;
     }, []);
@@ -97,6 +116,12 @@ const Stream = ({ className, videoId, videoReleased, addonName, name, descriptio
         return deepLinks?.externalPlayer?.magnet;
     }, [deepLinks]);
 
+    const selectLastUsedStream = React.useCallback(() => {
+        if (typeof onSelect === 'function') {
+            onSelect();
+        }
+    }, [onSelect]);
+
     const markVideoAsWatched = React.useCallback(() => {
         if (typeof videoId === 'string') {
             core.transport.dispatch({
@@ -114,11 +139,13 @@ const Stream = ({ className, videoId, videoReleased, addonName, name, descriptio
             return;
         }
 
+        selectLastUsedStream();
+
         if (profile.settings.playerType !== null) {
             markVideoAsWatched();
             toast.show({
                 type: 'success',
-                title: 'Stream opened in external player',
+                title: isLastUsedStream ? 'Stream opened' : 'Stream opened and saved as last used',
                 timeout: 4000
             });
         }
@@ -126,7 +153,7 @@ const Stream = ({ className, videoId, videoReleased, addonName, name, descriptio
         if (typeof props.onClick === 'function') {
             props.onClick(event);
         }
-    }, [props.onClick, profile.settings, markVideoAsWatched]);
+    }, [props.onClick, profile.settings, markVideoAsWatched, isLastUsedStream, selectLastUsedStream]);
 
     const copyMagnetLink = React.useCallback((event) => {
         event.preventDefault();
@@ -200,7 +227,17 @@ const Stream = ({ className, videoId, videoReleased, addonName, name, descriptio
 
     const renderLabel = React.useMemo(() => function renderLabel({ className, children, ...props }) {
         return (
-            <Button className={classnames(className, styles['stream-container'])} title={addonName} href={href} target={target} download={download} onClick={onClick} {...props}>
+            <Button
+                className={classnames(className, styles['stream-container'], { [styles['last-used-stream-container']]: isLastUsedStream })}
+                title={addonName}
+                href={href}
+                target={target}
+                download={download}
+                data-last-used-stream={isLastUsedStream ? 'true' : 'false'}
+                onPointerDownCapture={selectLastUsedStream}
+                onClick={onClick}
+                {...props}
+            >
                 <div className={styles['info-container']}>
                     {
                         typeof thumbnail === 'string' && thumbnail.length > 0 ?
@@ -227,12 +264,20 @@ const Stream = ({ className, videoId, videoReleased, addonName, name, descriptio
                             null
                     }
                 </div>
-                <div className={styles['description-container']} title={description}>{description}</div>
+                <div className={styles['description-container']} title={description}>
+                    {
+                        isLastUsedStream ?
+                            <div className={styles['last-used-badge']}>★ Last used</div>
+                            :
+                            null
+                    }
+                    <div>{description}</div>
+                </div>
                 <Icon className={styles['icon']} name={'play'} />
                 {children}
             </Button>
         );
-    }, [thumbnail, progress, addonName, name, description, href, target, download, onClick]);
+    }, [thumbnail, progress, addonName, name, description, href, target, download, onClick, isLastUsedStream, selectLastUsedStream]);
 
     const renderMenu = React.useMemo(() => function renderMenu() {
         return (
@@ -246,28 +291,28 @@ const Stream = ({ className, videoId, videoReleased, addonName, name, descriptio
                 </Button>
                 {
                     streamLink &&
-                        <Button className={styles['context-menu-option-container']} title={t('CTX_COPY_STREAM_LINK')} onClick={copyStreamLink}>
-                            <Icon className={styles['menu-icon']} name={'link'} />
-                            <div className={styles['context-menu-option-label']}>{t('CTX_COPY_STREAM_LINK')}</div>
-                        </Button>
+                    <Button className={styles['context-menu-option-container']} title={t('CTX_COPY_STREAM_LINK')} onClick={copyStreamLink}>
+                        <Icon className={styles['menu-icon']} name={'link'} />
+                        <div className={styles['context-menu-option-label']}>{t('CTX_COPY_STREAM_LINK')}</div>
+                    </Button>
                 }
                 {
                     magnetLink &&
-                        <Button className={styles['context-menu-option-container']} title={t('CTX_COPY_MAGNET_LINK')} onClick={copyMagnetLink}>
-                            <Icon className={styles['menu-icon']} name={'magnet-link'} />
-                            <div className={styles['context-menu-option-label']}>{t('CTX_COPY_MAGNET_LINK')}</div>
-                        </Button>
+                    <Button className={styles['context-menu-option-container']} title={t('CTX_COPY_MAGNET_LINK')} onClick={copyMagnetLink}>
+                        <Icon className={styles['menu-icon']} name={'magnet-link'} />
+                        <div className={styles['context-menu-option-label']}>{t('CTX_COPY_MAGNET_LINK')}</div>
+                    </Button>
                 }
                 {
                     downloadLink &&
-                        <Button className={styles['context-menu-option-container']} title={t('CTX_DOWNLOAD_VIDEO')} onClick={copyDownloadLink}>
-                            <Icon className={styles['menu-icon']} name={'download'} />
-                            <div className={styles['context-menu-option-label']}>{t('CTX_COPY_VIDEO_DOWNLOAD_LINK')}</div>
-                        </Button>
+                    <Button className={styles['context-menu-option-container']} title={t('CTX_DOWNLOAD_VIDEO')} onClick={copyDownloadLink}>
+                        <Icon className={styles['menu-icon']} name={'download'} />
+                        <div className={styles['context-menu-option-label']}>{t('CTX_COPY_VIDEO_DOWNLOAD_LINK')}</div>
+                    </Button>
                 }
             </div>
         );
-    }, [copyStreamLink, onClick]);
+    }, [copyStreamLink, copyMagnetLink, copyDownloadLink, streamLink, magnetLink, downloadLink, description]);
 
     React.useEffect(() => {
         if (!routeFocused) {
@@ -300,6 +345,8 @@ Stream.propTypes = {
     description: PropTypes.string,
     thumbnail: PropTypes.string,
     progress: PropTypes.number,
+    isLastUsedStream: PropTypes.bool,
+    onSelect: PropTypes.func,
     deepLinks: PropTypes.shape({
         player: PropTypes.string,
         externalPlayer: PropTypes.shape({
